@@ -44,7 +44,7 @@ io.sockets.on('connection', (socket) => {
         socket.join(room);
     });
 
-    room = "ana"
+    room = "sala"
     //console.log(room)
 
     usuarios++
