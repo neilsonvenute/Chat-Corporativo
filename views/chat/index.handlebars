@@ -1,8 +1,14 @@
 {{!-- Código por Neilson-lUCAS --}}
-<input type="text" name="txtNome" id="txtNome" value="" hidden="true">
+
 <link rel="stylesheet" href="/css/sala.css" type="text/css">
+<input type="text" name="txtSala" id="txtSala" value="{{sal}}" hidden="true">
+
 <form action="" name="chat" id="chat">
-    <div class="card bg-primary mt-4" style="height: 600px;">
+    <input type="text" name="txtNome" id="txtNome" value="" hidden="true">
+    <div class="card bg-primary mt-4" style="height: 100%;">
+        <div class="text-white"><strong style="margin-left: 5px;">SIGEIN - Chat Corporativo</strong>
+
+            <a href="/chat/conversas" id="fechar" class=" btn btn-primary float-right"><strong>X</strong></a></div>
         <div class="card-header bg-warning">
             <div class="card-title text-black">
                 <label for="nome" style="font-size:20px; font-weight:bold;">{{texto}}</label>
@@ -10,16 +16,19 @@
             <div class="is_typing text-danger" id="is_typing"></div>
         </div>
         <div class="card-body bg-white" style="overflow: auto;" id="bodyMessage">
-            <div class="messages mt-2 "></div>
+            {{!-- <div class="messages mt-2 "></div> --}}
+            <div id="messages"></div>
         </div>
         <div class="card-footer bg-white bg-outline-primary">
             <div class="input-group">
-                <label for="lblMensagem" class="text-black">Mensagem:</label>
+                <label for="lblMensagem" class="text-black"><strong> Mensagem:</strong></label>
                 <div class="input-group mb-3">
-                    <input type="text" class="form-control" placeholder="Digite aqui..." name="txtMensagem"
-                        id="txtMensagem">
+                    
+                    <input type="textarea" class="form-control" placeholder="Digite aqui..." name="txtMensagem"
+                        id="txtMensagem" autocomplete="off">
                     <div class="input-group-append">
-                        <button type="submit" name="btnEnviar" class="btn btn-outline-secondary text-black">Enviar</button>
+                        <button type="submit" name="btnEnviar"
+                            class="btn btn-outline-secondary text-black">Enviar</button>
                     </div>
                 </div>
             </div>
@@ -28,10 +37,12 @@
 </form>
 
 
+
+
 <script type="text/javascript">
-    //const socket = io("http://192.168.1.5:8045")
     const socket = io.connect();
-    var room = prompt("Informe o nome da sala (sala)", "");
+    //recebe a sala contida no campo que txtSala passado via parâmetro.
+    var room = $('#txtSala').val()
     var nomeUsuario = prompt("Qual é o seu nome?", "");
     $('#txtNome').val(nomeUsuario)
 
@@ -40,13 +51,18 @@
         socket.emit('room', room);
 
         function renderMessages(message) {
-            /*$('.messages').append('<div class="message mt-2" style="border-radius: 10px;"><strong class="text-primary">' +
-                message.author + '</strong>: <br>' + message.message + '</div>')*/
-            $('.messages').append('<div class="message mt-2 text-justify" style="border-radius:' +
-                ' 6px; background-color: AliceBlue;"><div style="margin-left: 5px;"><strong class="text-primary">' +
-                message.author + '</strong></br>' + message.message + '</br>' +
-                '</div><div class="text-right" style="margin-right: 5px;"><small class="text-secondary">' + message.dataa +
-                '</small></div></div > ')
+            /*A mensagem enviada pelo remente fica no direito sem o seu nome.*/
+            if (message.author == $('#txtNome').val()) {
+                $('#messages').append('<div id="direito"><label id="mensagem">' + message.message +
+                    '</label><br><div id="direito"><small class="text-secondary">' + message.dataa +
+                    '</small></div></div></div>' + '<hr id="linha" style="position: relative; float: right;">')
+            } else {
+                /*Posiciona a mensagem para o recebedor no lado esquerdo com o seu nome no topo da mensagem.*/
+                $('#messages').append('<div id="esquerdo"><strong id="autor">' + message.author +
+                    '</strong><br><div id="esquerdo"><label id="mensagem">' + message.message +
+                    '</label><br><div id="esquerdo"><small class="text-secondary">' + message.dataa +
+                    '</small></div></div></div>' + '<hr id="linha" style="position: relative; float: left;">')
+            }
         }
 
         socket.on('previousMessage', function (messages) {
@@ -64,13 +80,19 @@
         })
 
         $("#txtMensagem").keypress(function () {
-            socket.emit("typing", $('#txtNome').val());
+            var quarto = $('#txtSala').val()
+            var nome = $("#txtNome").val()
+            var notObejct = {
+                quarto: quarto,
+                nome: nome
+            }
+            socket.emit("typing",notObejct);
         });
 
         $('#chat').ready(function () {
             $('#txtMensagem').keyup(function (e) {
                 if (e.wich == 8 || e.keyCode == 8) {
-                    socket.emit("not-typing", $('#txtNome').val());
+                    socket.emit("not-typing", $('#txtSala').val());
                 }
             })
         })
@@ -81,7 +103,7 @@
 
         socket.on("typing", function (data) {
             $('.is_typing').empty()
-            $('.is_typing').append("<strong><em style='font-size:12px'>" + data + " está digitando...</em></strong>")
+            $('.is_typing').append("<strong><em style='font-size:12px'>" + data.nome + " está digitando...</em></strong>")
         });
 
     });
@@ -97,7 +119,8 @@
             var messageObject = {
                 author: author,
                 message: message,
-                dataa: dataa
+                dataa: dataa,
+                room: room
             }
             //renderMessages(messageObject)
             socket.emit('sendMessage', messageObject);

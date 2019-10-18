@@ -43,10 +43,6 @@ io.sockets.on('connection', (socket) => {
     socket.on('room', function (room) {
         socket.join(room);
     });
-
-    room = "sala"
-    //console.log(room)
-
     usuarios++
 
     io.emit('usuarios online', usuarios)
@@ -55,17 +51,15 @@ io.sockets.on('connection', (socket) => {
 
     socket.on('sendMessage', data => {
         messages.push(data)
-        // socket.broadcast.emit('receivedMessage', data)
-        io.sockets.in(room).emit('receivedMessage', data)
-        //console.log(data)
+        io.sockets.in(data.room).emit('receivedMessage', data)
     })
 
     socket.on("typing", function (data) {
-        socket.broadcast.to(room).emit("typing", data);
+        socket.broadcast.to(data.room).emit("typing", data);
     });
 
     socket.on("not-typing", function (data) {
-        socket.broadcast.to(room).emit("not-typing", data);
+        socket.broadcast.to(data.room).emit("not-typing", data);
     });
 
 })
