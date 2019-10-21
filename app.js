@@ -26,43 +26,59 @@ app.get('/', (req, res) => {
     res.render('index')
 })
 
-app.use('/chat',chats)
+app.use('/chat', chats)
 
 let messages = []
 var usuarios = 0
-
-
-/*let counter = 0
-setInterval(() => {
-    io.emit('msg',counter++)
-}, 1000);*/
+var users = {};
 
 
 io.sockets.on('connection', (socket) => {
-
     socket.on('room', function (room) {
         socket.join(room);
+        console.log(room)
+        //socket.broadcast.to(room).emit('previousMessage', messages)
     });
+
+
+    socket.on('adduser', function(username){
+        // we store the username in the socket session for this client
+		socket.username = username;
+		// add the client's username to the global list
+        users[username] = socket.id;
+        console.log(users)
+    })
+
     usuarios++
-
     io.emit('usuarios online', usuarios)
-
-    socket.emit('previousMessage', messages)
-
+    //socket.emit('previousMessage', messages)
+    //socket.broadcast.to(room).emit('previousMessage', messages)
     socket.on('sendMessage', data => {
         messages.push(data)
+        // socket.broadcast.emit('receivedMessage', data)
         io.sockets.in(data.room).emit('receivedMessage', data)
+        //console.log(data)
+    })
+
+    //socket.emit('previousPrivateMessage', messages)
+
+    socket.on('sendPrivateMessage', data => {
+        messages.push(data)
+        // socket.broadcast.emit('receivedMessage', data)
+        io.to(data.room).emit('receivedPrivateMessage', data)
+        //console.log(data)
     })
 
     socket.on("typing", function (data) {
-        socket.broadcast.to(data.room).emit("typing", data);
+        socket.broadcast.to(data.quarto).emit("typing", data);
     });
 
     socket.on("not-typing", function (data) {
-        socket.broadcast.to(data.room).emit("not-typing", data);
+        socket.broadcast.to(data).emit("not-typing", data);
     });
-
 })
+
+
 
 server.listen(PORT, () => {
     console.log('Servidor iniciado...')

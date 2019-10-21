@@ -1,5 +1,3 @@
-{{!-- Código por Neilson-lUCAS --}}
-
 <link rel="stylesheet" href="/css/sala.css" type="text/css">
 <input type="text" name="txtSala" id="txtSala" value="{{sal}}" hidden="true">
 
@@ -23,7 +21,7 @@
             <div class="input-group">
                 <label for="lblMensagem" class="text-black"><strong> Mensagem:</strong></label>
                 <div class="input-group mb-3">
-                    
+
                     <input type="textarea" class="form-control" placeholder="Digite aqui..." name="txtMensagem"
                         id="txtMensagem" autocomplete="off">
                     <div class="input-group-append">
@@ -42,14 +40,15 @@
 <script type="text/javascript">
     const socket = io.connect();
     //recebe a sala contida no campo que txtSala passado via parâmetro.
-    var room = $('#txtSala').val()
+    var room = prompt("Informe o nome para a sala", "");
     var nomeUsuario = prompt("Qual é o seu nome?", "");
-    //O campo txtNome recebe o nome do usuário passado quando entra na sala.
     $('#txtNome').val(nomeUsuario)
 
     socket.on('connect', function () {
         // Connected, let's sign-up for to receive messages for this room
         socket.emit('room', room);
+        socket.emit('adduser', nomeUsuario);
+        
 
         function renderMessages(message) {
             /*A mensagem enviada pelo remente fica no direito sem o seu nome.*/
@@ -66,13 +65,13 @@
             }
         }
 
-        socket.on('previousMessage', function (messages) {
+        socket.on('previousPrivateMessage', function (messages) {
             for (message of messages) {
                 renderMessages(message)
             }
         })
 
-        socket.on('receivedMessage', function (message) {
+        socket.on('receivedPrivateMessage', function (message) {
             renderMessages(message)
             $(function () {
                 $('#bodyMessage').animate({ scrollTop: 9999999 }, 500);
@@ -81,15 +80,14 @@
         })
 
         $("#txtMensagem").keypress(function () {
-            var quarto = $('#txtSala').val()
+            var quarto = room
             var nome = $("#txtNome").val()
             var notObejct = {
                 quarto: quarto,
                 nome: nome
             }
-            socket.emit("typing", notObejct);
+            socket.emit("typing",notObejct);
         });
-
 
         $('#chat').ready(function () {
             $('#txtMensagem').keyup(function (e) {
@@ -110,8 +108,6 @@
 
     });
 
-    
-
     $('#chat').submit(function (event) {
         event.preventDefault();
 
@@ -124,10 +120,10 @@
                 author: author,
                 message: message,
                 dataa: dataa,
-                room: room
+                room:room
             }
             //renderMessages(messageObject)
-            socket.emit('sendMessage', messageObject);
+            socket.emit('sendPrivateMessage', messageObject);
             $(function () {
                 $('#bodyMessage').animate({ scrollTop: 9999999 }, 500);
             });
@@ -138,6 +134,8 @@
             window.close();
         });
     })
+
+
 
     function pegarDataAtual() {
         var dataAtual = new Date();
@@ -152,6 +150,4 @@
         var dataFormatada = dia + "/" + mes + "/" + ano + " " + hora + ":" + minuto;
         return dataFormatada;
     }
-
-
 </script>

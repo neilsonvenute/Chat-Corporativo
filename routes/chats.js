@@ -12,7 +12,8 @@ router.get('/index/:nome/:sala', (req, res) => {
 
 router.get('/privado/:nome', (req, res) => {
     var texto = req.params.nome
-    res.render('chat/privado', { texto })
+    //var sal = req.params.sala
+    res.render('chat/privado', { texto})
 })
 
 router.get('/conversas', (req, res) => {
