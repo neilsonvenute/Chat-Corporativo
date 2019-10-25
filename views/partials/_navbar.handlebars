@@ -1,24 +1,23 @@
-{{!-- <nav class="navbar navbar-expand-lg navbar-light bg-light"> --}}
-<nav class="navbar fixed-top navbar-light bg-light">
-  <a class="navbar-brand" href="/">Chat</a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
+<nav class="navbar navbar-expand-md navbar-light bg-light fixed-top">
+        <a href="/" class="navbar-brand">
+            <img src="/img/Hiper.jpg" height="28" alt="CoolBrand">
+            Chat Corporativo
+        </a>
+        <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-  <div class="collapse navbar-collapse" id="navbarSupportedContent">
-    <ul class="navbar-nav mr-auto">
-      {{!-- <li class="nav-item">
-        <a class="nav-link" href="#">Suporte</a>
-      </li> --}}
-    </ul>
-    <ul class="navbar-nav text-right">
-      {{!-- <li class="nav-item">
-        <a class="nav-link" href="/suporte/index">Suporte</a>
-      </li> --}}
-      <li class="nav-item active">
-        <a class="nav-link" href="/">Sair</a>
-      </li>
-    </ul>
-  </div>
-</nav>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <div class="navbar-nav">
+                <a href="/" class="nav-item nav-link active">Página Inicial</a>
+                <a href="#" class="nav-item nav-link">Perfil</a>
+                <a href="/chat/conversas" class="nav-item nav-link">Conversas</a>
+                <a href="/admin/" class="nav-item nav-link">Painel de Controle</a>
+                {{!-- <a href="#" class="nav-item nav-link disabled" tabindex="-1">Reports</a> --}}
+            </div>
+            <div class="navbar-nav ml-auto">
+                <a href="#" class="nav-item nav-link" hidden="true">Login</a>
+                <a href="/" class="nav-item nav-link" >Sair</a>
+            </div>
+        </div>
+    </nav>

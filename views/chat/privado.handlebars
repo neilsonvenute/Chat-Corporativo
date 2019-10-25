@@ -4,14 +4,14 @@
 <form action="" name="chat" id="chat">
     <input type="text" name="txtNome" id="txtNome" value="" hidden="true">
     <div class="card bg-primary mt-4" style="height: 100%;">
-        <div class="text-white"><strong style="margin-left: 5px;">SIGEIN - Chat Corporativo</strong>
-
+        <div class="font-weight-lighter text-white bg-primary" id="titulo"><strong style="margin-left: 5px;">SIGEIN - Chat
+                Corporativo</strong>
             <a href="/chat/conversas" id="fechar" class=" btn btn-primary float-right"><strong>X</strong></a></div>
         <div class="card-header bg-warning">
             <div class="card-title text-black">
                 <label for="nome" style="font-size:20px; font-weight:bold;">{{texto}}</label>
             </div>
-            <div class="is_typing text-danger" id="is_typing"></div>
+            <div class="is_typing bg-white" id="is_typing"></div>
         </div>
         <div class="card-body bg-white" style="overflow: auto;" id="bodyMessage">
             {{!-- <div class="messages mt-2 "></div> --}}
@@ -23,7 +23,7 @@
                 <div class="input-group mb-3">
 
                     <input type="textarea" class="form-control" placeholder="Digite aqui..." name="txtMensagem"
-                        id="txtMensagem" autocomplete="off">
+                        id="txtMensagem" autocomplete="off" autofocus="true">
                     <div class="input-group-append">
                         <button type="submit" name="btnEnviar"
                             class="btn btn-outline-secondary text-black">Enviar</button>
@@ -53,15 +53,14 @@
         function renderMessages(message) {
             /*A mensagem enviada pelo remente fica no direito sem o seu nome.*/
             if (message.author == $('#txtNome').val()) {
-                $('#messages').append('<div id="direito"><label id="mensagem">' + message.message +
-                    '</label><br><div id="direito"><small class="text-secondary">' + message.dataa +
-                    '</small></div></div></div>' + '<hr id="linha" style="position: relative; float: right;">')
+                $('#messages').append('<div class="bubble" id="direito"><label id="mensagem">' + message.message +
+                    '</label><br><div id="direito"><small class="text-secondary float-right" style="border: 0px;"> ' + message.dataa +
+                    ' <i class="fas fa-check"></i> </small></div></div></div>' + '<hr id="linha" style="position: relative; float: right;">')
             } else {
                 /*Posiciona a mensagem para o recebedor no lado esquerdo com o seu nome no topo da mensagem.*/
-                $('#messages').append('<div id="esquerdo"><strong id="autor">' + message.author +
-                    '</strong><br><div id="esquerdo"><label id="mensagem">' + message.message +
-                    '</label><br><div id="esquerdo"><small class="text-secondary">' + message.dataa +
-                    '</small></div></div></div>' + '<hr id="linha" style="position: relative; float: left;">')
+                $('#messages').append('<div class="bubblel" id="esquerdo"><label id="mensagem">' + message.message +
+                    '</label><br><div id="esquerdo"><small class="text-secondary float-right"> ' + message.dataa +
+                    ' <i class="fas fa-check"></i> </small></div></div></div>' + '<hr id="linha" style="position: relative; float: left;">')
             }
         }
 
@@ -147,7 +146,7 @@
         var segundo = (dataAtual.getSeconds() < 10 ? '0' : '') + dataAtual.getSeconds();
 
         //var dataFormatada = dia + "/" + mes + "/" + ano + " " + hora + ":" + minuto + ":" + segundo;
-        var dataFormatada = dia + "/" + mes + "/" + ano + " " + hora + ":" + minuto;
+        var dataFormatada = hora + ":" + minuto;
         return dataFormatada;
     }
 </script>

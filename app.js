@@ -8,6 +8,7 @@ const bodyParser = require('body-parser')
 const io = require('socket.io')(server)
 
 const chats = require('./routes/chats')
+const admini = require('./routes/admin')
 
 
 //Congfiguração da engine
@@ -27,6 +28,7 @@ app.get('/', (req, res) => {
 })
 
 app.use('/chat', chats)
+app.use('/admin', admini)
 
 let messages = []
 var usuarios = 0
@@ -36,7 +38,7 @@ var users = {};
 io.sockets.on('connection', (socket) => {
     socket.on('room', function (room) {
         socket.join(room);
-        console.log(room)
+        //console.log(room)
         //socket.broadcast.to(room).emit('previousMessage', messages)
     });
 
@@ -46,7 +48,7 @@ io.sockets.on('connection', (socket) => {
 		socket.username = username;
 		// add the client's username to the global list
         users[username] = socket.id;
-        console.log(users)
+        //console.log(users)
     })
 
     usuarios++

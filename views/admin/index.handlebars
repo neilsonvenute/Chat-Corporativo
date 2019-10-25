@@ -1,0 +1,45 @@
+<link rel="stylesheet" href="/css/admin.css">
+
+<div id="mySidenav" class="sidenav">
+
+    <h5><strong>Usuário</strong></h5>
+    <a href="/admin/addusuario">Cadastro</a>
+    <a href="#">Remover</a>
+    <a href="#">Editar</a>
+    <hr>
+    <h5><strong>Deapartmento</strong></h5>
+    <a href="#">Novo Departamento</a>
+    <a href="#">Administrador</a>
+    <a href="#">Vincular Usuário</a>
+    <hr>
+    <h5><strong>Gerais</strong></h5>
+    <a href="#">Preferências</a>
+    <a href="#">Sobre</a>
+    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">
+        <!--&times;--> Fechar Menu</a>
+</div>
+
+<div id="main">
+    {{!-- <h4>Configurações do Chat</h4>
+    <p class="text-justify">Caro administrador, configure o <strong class="text-dark">Chat Corporativo</strong> de acordo com as regras de
+        negócio
+        da empresa. Cadastre os departamentos, os usuários e defina as regras para o funcionamento do chat conforme
+        achar necessário.</p> --}}
+    {{!-- <span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776; Opções</span> --}}
+    <button class="btn btn-primary" onclick="openNav()">Acessar Configurações</button>
+    <hr>
+</div>
+
+<script>
+    function openNav() {
+        document.getElementById("mySidenav").style.width = "250px";
+        document.getElementById("main").style.marginLeft = "250px";
+        document.body.style.backgroundColor = "rgba(0,0,0,0.4)";
+    }
+
+    function closeNav() {
+        document.getElementById("mySidenav").style.width = "0";
+        document.getElementById("main").style.marginLeft = "0";
+        document.body.style.backgroundColor = "white";
+    }
+</script>
